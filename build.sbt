@@ -29,4 +29,4 @@ libraryDependencies ++= Seq(
   "com.github.ghostdogpr" %% "caliban-tools" % CalibanVersion,
 )
 
-//testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework"))
+testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework"))
