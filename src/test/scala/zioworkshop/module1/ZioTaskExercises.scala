@@ -1,12 +1,10 @@
 package zioworkshop.module1
 
-import zio.{IO, Schedule, ZIO}
-import zio.test.Assertion.equalTo
-import zio.test.{DefaultRunnableSpec, Spec, TestFailure, TestSuccess, ZTestEnv}
-import zioworkshop.Common.{OurSpec, ___}
-import zio.test._
-import zio.test.Assertion._
+import zio.test.Assertion.{equalTo, _}
+import zio.test.{DefaultRunnableSpec, _}
 import zio.test.environment.testEnvironment
+import zio.{IO, Schedule, ZIO}
+import zioworkshop.Common.OurSpec
 
 import scala.language.postfixOps
 
@@ -37,8 +35,10 @@ object ZioTaskExercises extends DefaultRunnableSpec {
     testM("3. Recover from error") {
       object FooException extends Throwable
       val task: ZIO[Any, Throwable, Unit] = ZIO.fail(FooException)
+
 //      val recovered: ZIO[Any, Throwable, Unit] = ___ // task.???
       val recovered: ZIO[Any, Throwable, Unit] = task.orElse(ZIO.succeed(()))
+
       assertM(recovered)(anything)
     },
 
@@ -72,12 +72,12 @@ object ZioTaskExercises extends DefaultRunnableSpec {
 
     testM("6. Deal with defect") {
       object FooException extends Throwable
-      val client = HttpClient()
+      val a = IO.succeed(throw FooException)
 
-//      val io = IO.succeed(throw FooException) // A defect! Modify this line
-      val io = IO.succeed(throw FooException).absorb.orElse(IO.succeed())
+//      val b = a // A defect! Modify this line
+      val b = a.absorb.orElse(IO.succeed())
 
-      assertM(io)(anything)
+      assertM(b)(anything)
     },
 
     testM("7. Run for each element of collection") {

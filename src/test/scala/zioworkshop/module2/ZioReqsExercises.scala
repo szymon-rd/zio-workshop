@@ -12,7 +12,7 @@ import zio.test.environment.{TestClock, testEnvironment}
 
 object ZioReqsExercises extends DefaultRunnableSpec {
 
-  def spec: OurSpec = suite("ZioTaskExercises")(
+  def spec: OurSpec = suite("ZioReqsExercises")(
     testM("1. Provide HttpClient") {
       val fetchGoogle = ZIO.accessM[HttpClient](_.fetch("www.google.com"))
       val client = HttpClient()
