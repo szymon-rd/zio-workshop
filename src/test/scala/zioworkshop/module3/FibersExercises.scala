@@ -1,8 +1,9 @@
 package zioworkshop.module3
 
 import zio.test.Assertion.{equalTo, _}
+import zio.test.environment.testEnvironment
 import zio.test.{DefaultRunnableSpec, _}
-import zio.{Fiber, FiberRef, Has, IO, Ref, UIO, ZIO, ZLayer}
+import zio.{Fiber, FiberRef, Has, IO, Ref, Semaphore, UIO, ZIO, ZLayer}
 import zioworkshop.Common.{OurSpec, ___}
 
 object FibersExercises extends DefaultRunnableSpec {
@@ -137,5 +138,28 @@ object FibersExercises extends DefaultRunnableSpec {
         value <- fiberRef.locally(20)(fiberRef.get)
       } yield assert(value)(equalTo(20))
     },
+
+    // If you get bored :)
+    testM("Extra. Philosophers") {
+      trait BowlState
+      case object Full extends BowlState
+      case object Empty extends BowlState
+
+      def eat(n: Int, chopsticks: List[Semaphore], bowls: List[Ref[BowlState]]): ZIO[Any, Nothing, Unit] = {
+        val rightChopstick = chopsticks(n)
+        val leftChopstick = chopsticks((n + 1) % 5)
+        val bowl = bowls(n)
+        rightChopstick.withPermit(leftChopstick.withPermit(bowl.set(Empty)))
+      }
+
+      for {
+        chopsticks: List[Semaphore] <- ZIO.collectAll(List.fill(5)(Semaphore.make(permits = 1))).map(_.toList)
+        bowls: List[Ref[BowlState]] <- ZIO.collectAll(List.fill(5)(Ref.make[BowlState](Full)))
+        eatN = (n: Int) => eat(n, chopsticks, bowls)
+        // TODO Use `eatN` to make all bowls empty _in parallel_, example call:
+        _ <- eatN(2)
+        states <- ZIO.foreach(bowls)(_.get)
+      } yield assert(states)(forall(equalTo(Empty)))
+    }
   )
 }
