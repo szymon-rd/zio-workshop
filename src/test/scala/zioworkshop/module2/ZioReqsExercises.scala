@@ -17,8 +17,8 @@ object ZioReqsExercises extends DefaultRunnableSpec {
       val fetchGoogle = ZIO.accessM[HttpClient](_.fetch("www.google.com"))
       val client = HttpClient()
 
-//      val fetchGoogleProvided = ___[ZIO[Any, Throwable, String]] // provide the client to fetchGoogle
-      val fetchGoogleProvided = fetchGoogle.provide(client)
+      // TODO Provide the client to fetchGoogle
+      val fetchGoogleProvided = ___[ZIO[Any, Throwable, String]]
 
       assertM(fetchGoogleProvided)(containsString("google"))
     },
@@ -32,8 +32,8 @@ object ZioReqsExercises extends DefaultRunnableSpec {
       }
       val env: Has[FooService] with Has[BarService] = Has(FooService()) ++ Has(BarService())
 
-//      val foo = ___[ZIO[Has[FooService], Nothing, String]].provide(env) // extract foo from FooService in env
-      val foo = ZIO.access[Has[FooService]](_.get.foo).provide(env)
+      // TODO Extract foo from FooService in env
+      val foo = ___[ZIO[Has[FooService], Nothing, String]].provide(env)
 
       assertM(foo)(equalTo("foo"))
     },
@@ -44,8 +44,8 @@ object ZioReqsExercises extends DefaultRunnableSpec {
           client.fetch("www.google.com").map(_.replace("oo", "ooo"))
       }
 
-      //      val layer: ZLayer[Any, Nothing, FooService] = ___
-      val layer = ZLayer.succeed(HttpClient()) >>> ZLayer.fromService(FooService)
+      // TODO Construct layer with FooService from HttpClient
+      val layer: ZLayer[Any, Nothing, Has[FooService]] = ___
 
       (for {
         fooService <- ZIO.service[FooService]
@@ -64,8 +64,8 @@ object ZioReqsExercises extends DefaultRunnableSpec {
 
       type Services = Has[FooService] with Has[BarService]
 
-//      val services = ___[ZLayer[Has[HttpClient], Nothing, Services]]
-      val services = ZLayer.requires[Has[HttpClient]] >+> (ZLayer.fromService(FooService) ++ ZLayer.fromService(BarService))
+      // TODO Construct layer with FooService and BarService that requires HttpClient
+      val services = ___[ZLayer[Has[HttpClient], Nothing, Services]]
 
       val live = ZLayer.succeed(HttpClient()) >>> services
       (for {
@@ -105,13 +105,11 @@ object ZioReqsExercises extends DefaultRunnableSpec {
       type View     = Has[AppView]
 
 
-//      val repoLayer    = ___[ZLayer[Any, Nothing, Repos]]
-//      val serviceLayer = ___[ZLayer[Repos, Nothing, Services]]
-//      val viewLayer    = ___[ZLayer[Services, Nothing, View]]
+      // TODO Construct app layers
+      val repoLayer    = ___[ZLayer[Any, Nothing, Repos]]
+      val serviceLayer = ___[ZLayer[Repos, Nothing, Services]]
+      val viewLayer    = ___[ZLayer[Services, Nothing, View]]
 
-      val repoLayer = ZLayer.succeed(FooRepo()) ++ ZLayer.succeed(BarRepo())
-      val serviceLayer = ZLayer.fromService(FooService) ++ ZLayer.fromService(BarService)
-      val viewLayer    = ZLayer.fromServices[FooService, BarService, AppView](AppView)
 
       val app = repoLayer >+> serviceLayer >+> viewLayer
 
@@ -125,8 +123,8 @@ object ZioReqsExercises extends DefaultRunnableSpec {
     testM("6. Use ZEnv to fetch current time") {
       for {
         _ <- TestClock.setDateTime(OffsetDateTime.of(2021, 7, 21, 0, 0, 0, 0, ZoneOffset.UTC))
-//        time <- ___[ZIO[Clock, Throwable, OffsetDateTime]]
-        time <- ZIO.accessM[Clock](_.get.currentDateTime)
+        // TODO Access current date time from ZEnv Clock
+        time <- ___[ZIO[Clock, Throwable, OffsetDateTime]]
       } yield assert(time.getDayOfMonth)(equalTo(21))
       // That's why we use ZEnv's clock, we can set current time or make time steps with intervals using `adjust`
     }.provideLayer(testEnvironment)

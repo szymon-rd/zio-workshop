@@ -1,4 +1,4 @@
-package zioworkshop.module4
+package zioworkshop.module5
 
 import zio.console.putStrLn
 import zio.test.Assertion.{equalTo, _}
