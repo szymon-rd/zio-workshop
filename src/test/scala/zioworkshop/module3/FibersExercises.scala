@@ -153,8 +153,8 @@ object FibersExercises extends DefaultRunnableSpec {
       }
 
       for {
-        chopsticks: List[Semaphore] <- ZIO.collectAll(List.fill(5)(Semaphore.make(permits = 1))).map(_.toList)
-        bowls: List[Ref[BowlState]] <- ZIO.collectAll(List.fill(5)(Ref.make[BowlState](Full)))
+        chopsticks: List[Semaphore] <- ZIO.collectAll(List.fill(100)(Semaphore.make(permits = 1))).map(_.toList)
+        bowls: List[Ref[BowlState]] <- ZIO.collectAll(List.fill(100)(Ref.make[BowlState](Full)))
         eatN = (n: Int) => eat(n, chopsticks, bowls)
         // TODO Use `eatN` to make all bowls empty _in parallel_, example call:
         _ <- eatN(2)
