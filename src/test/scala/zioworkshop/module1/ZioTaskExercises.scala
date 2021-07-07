@@ -1,9 +1,9 @@
 package zioworkshop.module1
 
 import zio.test.Assertion.{equalTo, _}
-import zio.test.{DefaultRunnableSpec, _}
 import zio.test.environment.testEnvironment
-import zio.{IO, Schedule, ZIO}
+import zio.test.{DefaultRunnableSpec, _}
+import zio.{IO, ZIO}
 import zioworkshop.Common.{OurSpec, ___}
 
 import scala.language.postfixOps

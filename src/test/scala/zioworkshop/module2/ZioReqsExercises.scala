@@ -2,13 +2,11 @@ package zioworkshop.module2
 import java.time.{OffsetDateTime, ZoneOffset}
 
 import zio.clock.Clock
-import zio.{Has, IO, Schedule, ZIO, ZLayer}
-import zio.test.Assertion.equalTo
-import zio.test.{DefaultRunnableSpec, Spec, TestFailure, TestSuccess, ZTestEnv}
-import zioworkshop.Common.{OurSpec, ___}
-import zio.test._
-import zio.test.Assertion._
+import zio.test.Assertion.{equalTo, _}
+import zio.test.{DefaultRunnableSpec, _}
 import zio.test.environment.{TestClock, testEnvironment}
+import zio.{Has, ZIO, ZLayer}
+import zioworkshop.Common.{OurSpec, ___}
 
 object ZioReqsExercises extends DefaultRunnableSpec {
 

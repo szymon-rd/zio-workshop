@@ -1,9 +1,8 @@
 package zioworkshop.module3
 
 import zio.test.Assertion.{equalTo, _}
-import zio.test.environment.testEnvironment
 import zio.test.{DefaultRunnableSpec, _}
-import zio.{Fiber, FiberRef, Has, IO, Ref, Semaphore, UIO, ZIO, ZLayer}
+import zio.{Fiber, FiberRef, Has, IO, Ref, Semaphore, ZIO, ZLayer}
 import zioworkshop.Common.{OurSpec, ___}
 
 object FibersExercises extends DefaultRunnableSpec {
